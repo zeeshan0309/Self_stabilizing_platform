@@ -1,7 +1,7 @@
-//code for making your own accelerometer
+//code for making your own Self Stabilizing Platform
 //module MPU6050 has gyroscope too, but i'm currently reading only accln
 //you can make changes for measuring maximum/minimum acceleration in "processAccelData"
-//demonstration of finally finished circuit is here: https://youtu.be/YG_fWjylvV4
+//demonstration of finally finished circuit is here: https://youtube.com/c/stlo0309
 //you may publish this code anywhere you want, BUT give credits to me
 //_______________________________________________________________________________________________
 

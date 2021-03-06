@@ -1,16 +1,20 @@
 //code for making your own Self Stabilizing Platform
 //module MPU6050 has gyroscope too, but i'm currently reading only accln
-//you can make changes for measuring maximum/minimum acceleration in "processAccelData"
-//demonstration of finally finished circuit is here: https://youtube.com/c/stlo0309
+//demonstration of finally finished circuit is here: https://youtu.be/mJHAUlLGScw
 //you may publish this code anywhere you want, BUT give credits to me
+//for help with MPU6050 part of the code refer to https://youtu.be/M9lZ5Qy5S2s of EEEnthusiast on youtube
+//Servos have been controlled with "writeMicroseconds" for better resolution and stable motion
 //_______________________________________________________________________________________________
 
 #include<Wire.h>
 #include<Servo.h>
-long accelX, accelY, accelZ;    //variables for measuring acceleration
-float gForceX, gForceY, gForceZ, maxX = 0.0, maxY = 0.0, maxZ = 0.0;  //variables for storing g-forces 
 
-long gyroX, gyroY, gyroZ;   //variables for measuring angle rotations
+//variables for measuring acceleration
+long accelX, accelY, accelZ;    
+
+//variables for storing g-forces 
+float gForceX, gForceY, gForceZ; 
+
 float rotX, rotY, rotZ;
 
 float pitch, roll, prevP, prevR;
@@ -30,8 +34,7 @@ void setup(){
   myServo2.attach(10);      //myServo2, 10 => pitch
 }
 
-//function for setting up the module's communication
-
+//function for setting up MPU6050 i2c communication
 void setupMPU(){
   Wire.beginTransmission(0b1101000);
   Wire.write(0x6B);
@@ -47,7 +50,6 @@ void setupMPU(){
 }
 
 //function for reading acceleration data
-
 void recordAccelRegisters(){
   Wire.beginTransmission(0b1101000);
   Wire.write(0x3B);
@@ -60,8 +62,8 @@ void recordAccelRegisters(){
   processAccelData();
 }
 
-//function for processing acceleration data;
-
+//function for processing acceleration data
+//pitch & roll found here along with acceleration in g's
 void processAccelData(){
   gForceX = accelX/16384.0;
   gForceY = accelY/16384.0;
@@ -79,7 +81,6 @@ void loop(){
 }
 
 //function for printing the acceleration data
-
 void printData(){
   Serial.print("accel X =");
   Serial.print(gForceX);
@@ -97,6 +98,7 @@ void printData(){
   Serial.println("");
 }
 
+//function for correcting for pitch deviations
   void pitchCor( float pitch){
     
     if(pitch>1505.0 || pitch<1500){
@@ -105,6 +107,7 @@ void printData(){
     }
 }
 
+//function for correcting for roll deviations
   void rollCor( float roll){
   if(roll>1502.0 || roll<1500){
       myServo1.writeMicroseconds(1500+(1500-roll));
